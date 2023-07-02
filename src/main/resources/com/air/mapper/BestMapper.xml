@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.air.mapper.BestMapper">
+    <!--查询所有航空公司名称-->
+    <!--public List<String> queryAllCompany();-->
+    <select id="queryAllCompany" resultType="String">
+        select cname from t_company
+    </select>
+
+    <!--根据公司名查找最热门的航班-->
+    <!--public DetailedAirline queryBestByCname(String cname);-->
+    <select id="queryBestByCname" resultType="DetailedAirline">
+        select t_company.cname,t_view_air_line.line, date, model, 1-num_business/total_business businessRate,
+            1-num_economy/total_economy economyRate, start_place, end_place
+        from t_company,t_view_air_line
+        where t_view_air_line.line like concat(t_company.sign,'%')
+        <if test=" cname != null and cname != '' ">
+            and t_company.cname = #{cname}
+        </if>
+        order by (businessRate+economyRate)/2 desc;
+    </select>
+
+    <!--查询最热门的航空公司-->
+    <!--public DetailedAirline queryBest();-->
+    <select id="queryBest" resultType="DetailedAirline">
+        select t_company.cname, 1-sum(num_business)/sum(total_business) businessRate,
+        1-sum(num_economy)/sum(total_economy) economyRate
+        from t_company,t_view_air_line
+        where t_view_air_line.line like concat(t_company.sign,'%')
+        group by t_company.cname
+        order by (businessRate+economyRate)/2 desc ;
+    </select>
+
+</mapper>

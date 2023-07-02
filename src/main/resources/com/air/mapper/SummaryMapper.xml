@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.air.mapper.SummaryMapper">
+    <!--按照航空公司查询报表-->
+    <!--public List<DetailedAirline> querySummaryByCname();-->
+    <select id="querySummaryByCname" resultType="DetailedAirline">
+        select t_company.cname, 1-sum(num_business)/sum(total_business) businessRate,
+               1-sum(num_economy)/sum(total_economy) economyRate,count(*) times
+        from t_company,t_view_air_line
+        where t_view_air_line.line like concat(t_company.sign,'%')
+        group by t_company.cname
+    </select>
+
+    <!--按照机型查询报表-->
+    <!--public List<DetailedAirline> querySummaryByModel();-->
+    <select id="querySummaryByModel" resultType="DetailedAirline">
+        select model,1-sum(num_business)/sum(total_business) businessRate,
+               1-sum(num_economy)/sum(total_economy) economyRate,count(*) times
+        from t_view_air_line
+        group by model
+    </select>
+
+    <!--按照航线查询报表-->
+    <!--public List<DetailedAirline> querySummaryByPlace();-->
+    <select id="querySummaryByPlace" resultType="DetailedAirline">
+        select start_place,end_place,1-sum(num_business)/sum(total_business) businessRate,
+               1-sum(num_economy)/sum(total_economy) economyRate,count(*) times
+        from t_view_air_line
+        group by start_place,end_place
+    </select>
+</mapper>

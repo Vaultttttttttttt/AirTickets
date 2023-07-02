@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.air.mapper.MaintainTicketMapper">
+
+    <!--插入一条机票-->
+    <!--public void insertTicket(AirLine airLine);-->
+    <insert id="insertTicket">
+        insert into t_view_air_line
+        values (#{airLine.line},#{airLine.date},#{airLine.startTime},
+                #{airLine.endTime},#{airLine.model},#{airLine.numBusiness},
+                #{airLine.numEconomy},#{airLine.priceBusiness},#{airLine.priceEconomy},
+                #{airLine.startPlace},#{airLine.endPlace},
+                #{airLine.totalBusiness},#{airLine.totalEconomy})
+    </insert>
+
+    <insert id="insertTicketOther">
+        insert into t_air_line
+        values (#{airLine.line},#{airLine.date},#{airLine.startTime},
+                #{airLine.endTime},#{airLine.model},#{airLine.numBusiness},
+                #{airLine.numEconomy},#{airLine.priceBusiness},#{airLine.priceEconomy},
+                #{airLine.startPlace},#{airLine.endPlace},
+                #{airLine.totalBusiness},#{airLine.totalEconomy})
+    </insert>
+
+    <!--查询航班号的多少-->
+    <!--public int queryCountByLine(String line);-->
+    <select id="queryCountByLine" resultType="int">
+        select count(*) from t_company where sign = #{line}
+    </select>
+
+    <!--按照日期和航班号查询-->
+    <!--public AirLine queryAndGetByLineAndDate(@Param("line") String line, @Param("date") Timestamp date);-->
+    <select id="queryAndGetByLineAndDate" resultType="airline">
+        select line,date,start_time,end_time,
+            model,num_business,num_economy,
+            price_business,price_economy,start_place,
+            end_place,total_business,total_economy
+        from t_view_air_line
+        where line = #{line} and date = #{date}
+    </select>
+
+
+    <!--按照日期和航班号查询-->
+    <!--public int queryByLineAndDate(String line, Timestamp date);-->
+    <select id="queryByLineAndDate" resultType="int">
+        select count(*) from t_view_air_line where line = #{line} and date = #{date}
+    </select>
+
+    <!--按照航班号和日期修改机票-->
+    <!--public void updateByLineAndDate(@Param("airLine") AirLine airLine);-->
+    <update id="updateByLineAndDateOther">
+        update t_view_air_line
+        set start_time = #{airLine.startTime},
+            end_time = #{airLine.endTime}, model = #{airLine.model},num_business = #{airLine.numBusiness},
+            num_economy = #{airLine.numEconomy}, price_business = #{airLine.priceBusiness}, price_economy = #{airLine.priceEconomy},
+            start_place = #{airLine.startPlace}, end_place = #{airLine.endPlace},
+            total_business = #{airLine.totalBusiness}, total_economy = #{airLine.totalEconomy}
+        where line = #{airLine.line} and date = #{airLine.date}
+    </update>
+
+    <update id="updateByLineAndDate">
+        update t_air_line
+        set start_time = #{airLine.startTime},
+            end_time = #{airLine.endTime}, model = #{airLine.model},num_business = #{airLine.numBusiness},
+            num_economy = #{airLine.numEconomy}, price_business = #{airLine.priceBusiness}, price_economy = #{airLine.priceEconomy},
+            start_place = #{airLine.startPlace}, end_place = #{airLine.endPlace},
+            total_business = #{airLine.totalBusiness}, total_economy = #{airLine.totalEconomy}
+        where line = #{airLine.line} and date = #{airLine.date}
+    </update>
+
+    <!--按照航班号和日期删除机票-->
+    <!--public void deleteByLineAndDate(@Param("line") String line,@Param("date") Timestamp date);-->
+    <delete id="deleteByLineAndDate">
+        delete
+        from t_view_air_line
+        where line = #{line} and date = #{date}
+    </delete>
+
+    <delete id="deleteByLineAndDateOther">
+        delete
+        from t_air_line
+        where line = #{line} and date = #{date}
+    </delete>
+
+    <!--修改每日票价浮动因素-->
+    <!--public void updateByPriceUpDay(@Param("n") int n);-->
+    <update id="updateByPriceUpDay">
+        update t_price_update
+        set price_up_day = #{n}
+        where id = 1
+    </update>
+
+    <!--修改售票情况票价浮动因素-->
+    <!--public void updateByPriceUpNum(@Param("n") int n);-->
+    <update id="updateByPriceUpNum">
+        update t_price_update
+        set price_up_num = #{n}
+        where id = 1
+    </update>
+
+    <!--按照会员等级和折扣修改享受待遇-->
+    <!--public void updateByCard(@Param("card") String card,@Param("account") int account);-->
+    <update id="updateByCard">
+        update t_vip
+        set account = #{account}
+        where card = #{card}
+    </update>
+
+    <!--查询全部的公司-->
+    <!--public List<Company> queryCompany();-->
+    <select id="queryCompany" resultType="company">
+        select cname,sign from t_company
+    </select>
+
+    <!--添加公司-->
+    <!--public void addCompany(Company company);-->
+    <insert id="addCompany">
+        insert into t_company values (#{cname},#{sign})
+    </insert>
+
+    <!--按照公司名查找公司数量-->
+    <!--public int queryCountByCname(String cname);-->
+    <select id="queryCountByCname" resultType="int">
+        select count(*) from t_company where cname = #{cname}
+    </select>
+
+
+    <!--按照公司名查找航班编号-->
+    <!--public int queryCountBySign(@Param("sign") String sign);-->
+    <select id="queryCountBySign" resultType="int">
+        select count(*) from t_company where sign = #{sign}
+    </select>
+</mapper>

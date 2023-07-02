@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.air.mapper.BookingManageMapper">
+    <!--查询所有订单-->
+    <!--public List<Order> queryAllOrders(@Param("username") String username);-->
+    <select id="queryAllOrders" resultType="order">
+        select order_num,username,total_money,status from t_order where username = #{username}
+    </select>
+
+    <!--根据状态查询相关订单-->
+    <!--public List<Order> queryOrderByStatus(@Param("username") String username,@Param("status") String status);-->
+    <select id="queryOrderByStatus" resultType="order">
+        select order_num,username,total_money,status from t_order where username = #{username} and status = #{status}
+    </select>
+
+    <!--根据时间区间查询订单号-->
+    <!--public List<String> queryOrderNumByTime(@Param("startTime") Timestamp startTime,@Param("endTime") Timestamp endTime);-->
+    <select id="queryOrderNumByTime" resultType="String">
+        select order_num from t_order_item
+        <where>
+            <if test=" startTime != null ">
+                and date >= #{startTime}
+            </if>
+            <if test=" endTime != null ">
+                and <![CDATA[ date <= #{endTime} ]]>
+            </if>
+        </where>
+    </select>
+
+    <!--按照订单号集合查询相关订单-->
+    <!--public List<Order> queryOrderByListOfTime(@Param("username") String username,@Param("orderList") List<String> orderList);-->
+    <select id="queryOrderByListOfTime" resultType="order">
+        select order_num,username,total_money,status from t_order
+        where username = #{username}
+        <if test=" orderList != null ">
+            and order_num in
+            <foreach collection="orderList" item="o" separator="," open="(" close=")">
+                #{o}
+            </foreach>
+        </if>
+    </select>
+
+    <!--按照订单号查询订单详情-->
+    <!--public List<OrderItem> queryOrderItemByOrderNum(@Param("orderNum") String orderNum);-->
+    <select id="queryOrderItemByOrderNum" resultType="orderItem">
+        select order_num,name,line,date,cabin_type,money from t_order_item where order_num = #{orderNum}
+    </select>
+
+    <!--修改订单状态为已出行-->
+    <!--public void updateStatusToFinish(@Param("orderNum") String orderNum);-->
+    <update id="updateStatusToFinish">
+        update t_order set status = '已出行' where order_num = #{orderNum}
+    </update>
+
+    <!--按照订单号删除订单-->
+    <!--public void deleteOrderByOrderNum(@Param("orderNum") String orderNum);-->
+    <delete id="deleteOrderByOrderNum">
+        delete from t_order where order_num = #{orderNum}
+    </delete>
+
+
+</mapper>

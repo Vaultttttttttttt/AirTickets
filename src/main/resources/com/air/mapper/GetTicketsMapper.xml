@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.air.mapper.GetTicketsMapper">
+    <!--根据某些条件查询机票-->
+    <!--public List<AirLine> getTickets(ChooseItem chooseItem);-->
+    <select id="getTickets" resultType="airLine">
+        select line,date,start_time,end_time,
+               model,num_business,num_economy,
+               price_business,price_economy,start_place,
+               end_place,total_business,total_economy
+        from t_view_air_line
+        <where>
+                <if test=" line != '' and line != null ">
+                    line = #{line}
+                </if>
+                <if test=" date != null ">
+                    and date = #{date}
+                </if>
+                <if test=" startTime != null ">
+                    and start_time >= #{startTime}
+                </if>
+                <if test=" endTime != null ">
+                    and <![CDATA[ end_Time <= #{endTime} ]]>
+                </if>
+                <if test=" model != '' and model != null ">
+                    and model = #{model}
+                </if>
+                <if test=" minPriceBusiness != '' and minPriceBusiness != null ">
+                    and price_business >= #{minPriceBusiness}
+                </if>
+                <if test=" maxPriceBusiness != '' and maxPriceBusiness != null ">
+                    and <![CDATA[ price_business <= #{maxPriceBusiness} ]]>
+                </if>
+                <if test=" minPriceEconomy != '' and minPriceEconomy != null ">
+                    and price_economy >= #{minPriceEconomy}
+                </if>
+                <if test=" maxPriceEconomy != '' and maxPriceEconomy != null ">
+                    and <![CDATA[ price_economy <= #{maxPriceEconomy} ]]>
+                </if>
+                <if test=" startPlace != '' and startPlace != null ">
+                    and start_place = #{startPlace}
+                </if>
+                <if test=" endPlace != '' and endPlace != null ">
+                    and end_place = #{endPlace}
+                </if>
+        </where>
+    </select>
+
+    <!--查询对应等级优惠制度-->
+    <!--public int queryAccountByCard(String card);-->
+    <select id="queryAccountByCard" resultType="int">
+        select account from t_vip where card = #{card}
+    </select>
+
+    <!--查询每日因素-->
+    <!--public PriceUpdate queryPriceUpdate();-->
+    <select id="queryPriceUpdate" resultType="PriceUpdate">
+        select price_up_day,price_up_num from t_price_update where id =1;
+    </select>
+</mapper>

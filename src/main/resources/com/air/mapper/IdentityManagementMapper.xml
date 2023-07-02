@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.air.mapper.IdentityManagementMapper">
+
+    <!--修改vip信息-->
+    <!--public void updateVipInCustomerByName(@Param("name") String name,@Param("card") String card);-->
+    <update id="updateVipInCustomerByName">
+        update t_customer
+        set card = #{card}
+        where name = #{name}
+    </update>
+
+    <!--查询当前绑定人的vip等级-->
+    <!--public String queryCardByName(@Param("name") String name);-->
+    <select id="queryCardByName" resultType="String">
+        select card
+        from t_customer
+        where name = #{name}
+    </select>
+
+    <!--查询身份的详细信息-->
+    <!--public Customer queryCustomerByName(@Param("name") String name);-->
+    <select id="queryCustomerByName" resultType="customer">
+        select name,gender,age,level,job,card
+        from t_customer
+        where name = #{name}
+    </select>
+
+    <!--修改Customer表的身份信息-->
+    <!--public void updateCustomerInCustomerByName(Customer customer);-->
+    <update id="updateCustomerInCustomerByName">
+        update t_customer
+        set gender = #{gender} , age = #{age} ,
+            level = #{level} , job = #{job}
+        where name = #{name}
+    </update>
+
+    <!--查询vip优惠制度-->
+    <!--public int queryAccountByCard(@Param("card") String card);-->
+    <select id="queryAccountByCard" resultType="int">
+        select account
+        from t_vip
+        where card = #{card}
+    </select>
+
+</mapper>
